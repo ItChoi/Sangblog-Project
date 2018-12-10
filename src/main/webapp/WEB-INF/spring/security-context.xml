@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+			 
+			<beans:bean id="bcryptPasswordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />  
+			 
+			 
+			<!-- context:component-scan 이 있어야 UserDatailsServiceImpl 에서 Autowired가 정상 작동 -->
+			<!-- -> Root WAC / WAC 에서 설정했떠니 주석  처리해도 정상 작동 -->
+			<!-- <context:component-scan base-package="ver2.blog.sang"></context:component-scan>
+			<context:annotation-config /> -->
+			
+			<!-- <http pattern="" security="none"></http> -->
+			<!-- <intercept-url pattern="/manager/login.jsp" access="IS_AUTHENTICATED_ANONYMOUSLY"/> -->
+			<!-- 1. default-target-url="/manager/" -> 로그인 성공시 이동할 uri-->
+			<!-- 2. username-parameter="loginId" -> 스프링에서 인식할 username 파라미터 이름을 변경 -->
+			<!-- 3. authentication-failure-url="/login?error" -> 로그인 실패시 호출할 uri / error 파라미터를 넘겨준다. -->
+			<!-- 4. always-use-default-target -> 서버가 죽었다 살아났을때 기존 가려고 했던 페이지를 무시하고 
+            										무조건 handler에 정의된 페이지로 이동  
+											  -> 메인 로그인 화면 -> 빈에서 정의한 default-url 이동 ?
+											  	   오른쪽 상단 로그인 -> form에서 정의한 action 이동 ?
+											  	 두개 다 내가 설정한 url로 이동하고 싶을시 이 태그를 사용 / 기본 값은 false               										
+			-->
+			
+			<!-- % <security:csrf disabled="true" /> -> spring 4.x 때 추가된 옵션
+				 -> ssl 을 사용하지 않을 경우 csrf는 disabled true로 해준다.
+			 -->
+			 
+			 <!-- <intercept-url pattern="/resources/**" access="permitAll"/> -->
+			<http pattern="/resources/css/**" security="none"></http>
+			<http pattern="/resources/images/**" security="none"></http>
+			<http pattern="/resources/js/**" security="none"></http>
+			<http pattern="/resources/upload/**" security="none"></http>
+			<http pattern="/resources/**" security="none"></http>
+			
+			
+			<http auto-config="true" use-expressions="true">
+				<intercept-url pattern="/manager/login" access="permitAll"/>
+				<intercept-url pattern="/manager/**" access="hasRole('ROLE_MANAGER')" />
+				<intercept-url pattern="/**" access="permitAll" />
+				
+				<form-login 
+					login-page="/manager/login"
+					username-parameter="loginId"
+					password-parameter="password"
+					always-use-default-target="true"
+					
+					authentication-success-handler-ref="managerLoginSuccessHandler"
+					authentication-failure-handler-ref="managerLoginFailureHandler"
+				/>
+					<!-- default-target-url="/manager/"
+					authentication-failure-url="/manager/login?fail=true" --> 
+				
+				<!-- delete-cookies="JSESSIONID" : 로그아웃을 진행하면서 지워야 할 쿠키를 지정하는 속성 ,로 구분 여러 개 삭제 가능
+													WAS를 통해 웹브라우저로 웹페이지를 보면 JESSIONID란 이름의 쿠키가 내려오는데
+													로그아웃을 하면서 이 쿠키를 같이 삭제하기 위함
+				 -->
+				<logout invalidate-session="true"
+						delete-cookies="JSESSIONID"
+						logout-success-url="/manager/login?logout"
+						logout-url="/manager/logout"
+				/>
+				<!-- logout-success-url="/manager/login?logout" -->
+				
+				<csrf disabled="true"/>
+				
+			</http>
+			
+			
+			<!-- 테스트 -->
+			<!-- <authentication-manager>
+				<authentication-provider>
+					<user-service>
+						<user name="manager" password="1234" authorities="ROLE_USER" />
+					</user-service>
+				</authentication-provider>
+			</authentication-manager>  -->
+
+			
+			<authentication-manager>
+				<authentication-provider user-service-ref="userDetailsServiceImpl">
+					<password-encoder ref="bcryptPasswordEncoder" />
+				</authentication-provider>
+			</authentication-manager>
+			 
+			<beans:bean id="userDetailsServiceImpl" class="ver2.blog.sang.auth.UserDetailsServiceImpl"/>
+			
+			<beans:bean id="managerLoginSuccessHandler" class="ver2.blog.sang.auth.ManagerLoginSuccessHandler"/>
+			<beans:bean id="managerLoginFailureHandler" class="ver2.blog.sang.auth.ManagerLoginFailureHandler"/>
+			
+</beans:beans>

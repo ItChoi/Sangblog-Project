@@ -1,0 +1,45 @@
+@CHARSET "UTF-8";
+html, body, .wrap {
+	margin: 0px;
+	padding: 0px;
+}
+
+.li_bl {
+	display: inline-block;	
+}
+
+.wrap {
+	width: 100%;
+	height: 100%;
+}
+
+.header {
+	width: 100%;
+	height: 100px;
+}
+
+#top_header {
+	margin-top: 50px;
+	text-align: center;
+	width: 100%;
+	height: 100px;
+	background-color: gray;
+}
+
+.header_element {
+	margin-right: 30px;	
+}
+
+.content_wrap {
+	margin-left: 200px;
+	margin-right: 200px;
+	width: 1000px;
+}
+
+.content {
+	width: 100%;
+}
+
+
+
+

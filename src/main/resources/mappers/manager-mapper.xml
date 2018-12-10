@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ver2.blog.sang.ManagerMapper">
+	<resultMap id="ManagerInfoResult" type="ver2.blog.sang.domain.ManagerInfo">
+		<id property="managerId" column="MANAGER_ID"/>
+		<result property="loginId" column="LOGIN_ID"/>
+		<result property="password" column="PASSWORD"/>
+		<result property="name" column="NAME"/>
+		<result property="phoneNumber" column="PHONE_NUMBER"/>
+		<result property="email" column="EMAIL"/>
+		<result property="introduce" column="INTRODUCE"/>
+		<result property="imageName" column="IMAGE_NAME"/>
+		<result property="imageSrc" column="IMAGE_SRC" />
+		<result property="loginDate" column="LOGIN_DATE"/>
+		
+		<association property="managerCertificate" resultMap="ver2.blog.sang.ManagerMapper.ManagerCertificateResult" />
+		<association property="managerExperience" resultMap ="ver2.blog.sang.ManagerMapper.ManagerExperienceResult"/>
+	</resultMap>
+
+	<resultMap id="ManagerCertificateResult" type="ver2.blog.sang.domain.ManagerCertificate">
+		<id property="certificateId" column="CERTIFICATE_ID"/>
+		<result property="managerId" column="MANAGER_ID" />
+		<result property="getYear" column="GET_YEAR" />
+		<result property="certificateName" column="CERTIFICATE_NAME" />
+	</resultMap>
+	
+	<resultMap id="ManagerExperienceResult" type="ver2.blog.sang.domain.ManagerExperience">
+		<id property="experienceId" column="EXPERIENCE_ID"/>
+		<result property="managerId" column="MANAGER_ID" />
+		<result property="workYear" column="WORK_YEAR" />
+		<result property="company" column="COMPANY" />
+		<result property="workDetail" column="WORK_DETAIL" />
+	</resultMap>
+	
+	<!-- % security 끝나고 * 대신 이거 사용하기 (sql에서 * 사용하는 것은 안좋다.) -->
+	<sql id="AllColumnManagerInfo">
+		MI.MANAGER_ID,
+		MI.LOGIN_ID,
+		MI.PASSWORD,
+		MI.NAME,
+		MI.PHONE_NUMBER,
+		MI.EMAIL,
+		MI.INTRODUCE,
+		MI.IMAGE_NAME,
+		MI.LOGIN_DATE,
+		MI.IMAGE_SRC
+	</sql>
+	
+	<sql id="insertManagerWhere">
+		<if test="password != ''">
+			PASSWORD = #{password} ,
+		</if>
+		
+		<if test="name != '' ">
+			NAME = #{name} ,
+		</if>
+		
+		<if test="phoneNumber != ''">
+			PHONE_NUMBER = #{phoneNumber} ,
+		</if>
+		
+		<if test="email != ''">
+			EMAIL = #{email}, 
+		</if>
+		
+		<if test="introduce != ''">
+			INTRODUCE = #{introduce} ,
+		</if>
+		
+		<if test="imageName != ''">
+			IMAGE_NAME = #{imageName},
+		</if>
+		
+		<if test="file.originalFilename != ''">
+			IMAGE_SRC = #{imageSrc} 
+		</if>
+	</sql>
+	
+
+	<select id="getManagerInfoByLoginId" parameterType="String" resultMap="ManagerInfoResult">
+		SELECT
+		    MI.MANAGER_ID,
+			MI.LOGIN_ID,
+			MI.PASSWORD,
+			MI.NAME,
+			MI.PHONE_NUMBER,
+			MI.EMAIL,
+			MI.INTRODUCE,
+			MI.IMAGE_NAME,
+			MI.LOGIN_DATE,
+			MI.IMAGE_SRC
+		FROM
+			MANAGER_INFO MI
+		WHERE
+			LOGIN_ID = #{loginId}	
+	</select>
+
+	<select id="getManagerExperienceByManagerId" parameterType="Integer" resultMap="ManagerExperienceResult">
+		SELECT
+			*
+		FROM 
+			MANAGER_EXPERIENCE
+		WHERE
+			MANAGER_ID = #{managerId}
+	</select>
+
+	<select id="getManagerCertificate" parameterType="Integer" resultMap="ManagerCertificateResult">
+		SELECT
+			*
+		FROM
+			MANAGER_CERTIFICATE
+		WHERE
+			MANAGER_ID = #{managerId}
+	</select>
+	
+	
+	
+	<update id="updateManagerInfo" parameterType="ver2.blog.sang.domain.ManagerInfo">
+		UPDATE
+			MANAGER_INFO
+		<set>
+			<include refid="insertManagerWhere" />
+		</set>
+		WHERE
+			MANAGER_ID = #{managerId}
+			
+	</update>
+
+	<select id="getManagerIdByloginId" parameterType="String" resultMap="ManagerInfoResult">
+		SELECT 
+			MI.MANAGER_ID
+		FROM
+			MANAGER_INFO MI
+		WHERE 
+			LOGIN_ID = #{loginId}
+	</select>
+
+	<insert id="insertCertificate" parameterType="ver2.blog.sang.domain.ManagerInfo">
+		INSERT INTO MANAGER_CERTIFICATE (MANAGER_ID, CERTIFICATE_NAME, GET_YEAR)
+		VALUES (#{managerId}, #{managerCertificate.certificateName}, #{managerCertificate.getYear})
+	</insert>
+	
+	<insert id="insertExperience" parameterType="ver2.blog.sang.domain.ManagerInfo">
+		INSERT INTO MANAGER_EXPERIENCE (MANAGER_ID, WORK_YEAR, COMPANY, WORK_DETAIL)
+		VALUES (#{managerId}, #{managerExperience.workYear}, #{managerExperience.company}, #{managerExperience.workDetail})
+	</insert>
+	
+	<delete id="deleteCertificate" parameterType="Integer">
+		DELETE FROM MANAGER_CERTIFICATE 
+		WHERE CERTIFICATE_ID = #{specId}
+	</delete>
+	
+	<delete id="deleteExperience" parameterType="Integer">
+		DELETE FROM MANAGER_EXPERIENCE
+		WHERE EXPERIENCE_ID = #{specId}
+	</delete>
+	
+	<select id="getPasswordByLoginId" parameterType="String" resultType="String">
+		SELECT 
+			PASSWORD
+		FROM
+			MANAGER_INFO
+		WHERE
+			LOGIN_ID = #{loginId}
+	</select>
+	
+</mapper>  
+  

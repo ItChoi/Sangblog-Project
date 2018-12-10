@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="SangBlog:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <root id="archive" name="sang-1.0.0-BUILD-SNAPSHOT.war">
+      <element id="artifact" artifact-name="SangBlog:war exploded" />
+    </root>
+  </artifact>
+</component>

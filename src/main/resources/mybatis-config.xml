@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtdss/mybatis-3-config.dtd">
+  
+<configuration>
+	<properties>
+
+	</properties>
+	
+	<typeAliases>
+		<package name="ver2.blog.sang.domain"/>
+	</typeAliases>
+</configuration>

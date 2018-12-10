@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
+	xsi:schemaLocation="http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-4.3.xsd
+		http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd">
+	
+	<context:property-placeholder location="classpath:properties/sangblog.properties"/>
+	
+	<!-- DataSource -->
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+		<property name="url" value="jdbc:mysql://localhost:3306/sangblog2"/>
+		<property name="username" value="root"/>
+		<property name="password" value="tiger"/>
+		<!-- <property name="driverClassName" value="${jdbc.driver}"/>
+		<property name="url" value="${jdbc.url}"/>
+		<property name="username" value="${jdbc.username}"/>
+		<property name="password" value="${jdbc.password}"/> -->
+	</bean>	
+	
+	<!-- SqlSessionFactory -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"/>
+		<property name="configLocation" value="classpath:/mybatis-config.xml"/>
+		<property name="mapperLocations" value="classpath:mappers/*.xml"/>
+	</bean>
+	
+	<!-- SqlSession -->
+	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate" destroy-method="clearCache">
+		<constructor-arg name="sqlSessionFactory" ref="sqlSessionFactory"/>
+	</bean>	
+
+	<!-- <bean class="org.mybatis.spring.mapper.MapperConfigurer">
+		<property name="basePackage" value="classpath:mappers" />
+		<property name="basePackage" value="/ver2.blog.sang.mapper" />
+	</bean> -->
+
+	
+	<!-- @Mapper 사용하기 위함 - 안된다.... -->
+	<!-- <bean class="egovframework.rte.psl.dataaccess.mapper.MapperConfigurer">
+		<property name="basePackage" value="egovframework.rte.**.mapper" />
+	</bean>  -->
+	
+	
+<!-- 	<context:component-scan base-package="ver2.blog.sang.persistence" /> -->
+<!-- 	<context:component-scan base-package="ver2.blog.sang.service" /> -->
+
+
+	<!-- component-scan의 프로퍼티중에 use-default-filters의 기본값은 true 이다.
+	 이 부분을 false로 하고 설정을 하면 다른 필터는 로딩되지 않고 순수하게 설정된 부분만 필터링이된다. -->
+	<context:component-scan base-package="ver2.blog.sang" use-default-filters="true">
+		<context:include-filter type="annotation" expression="org.springframework.stereotype.Service"/>
+		<context:include-filter type="annotation" expression="org.springframework.stereotype.Repository"/>
+		<context:include-filter type="annotation" expression="org.springframework.stereotype.Component"/>
+	</context:component-scan>
+
+	<!-- ehcache 설정 -->
+
+	<!-- 스프링 시큐리티  error 메시지 설정 -->
+	<bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+		<property name="basenames">
+			<list>
+				<value>/WEB-INF/messages/spring_security_messages</value>
+			</list>
+		</property>
+		<property name="defaultEncoding" value="UTF-8" />
+		<property name="cacheSeconds" value="5" />
+	</bean>
+	
+	
+		
+</beans>

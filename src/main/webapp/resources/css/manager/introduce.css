@@ -1,0 +1,123 @@
+@CHARSET "UTF-8";
+.content_frame {
+	margin-left: 150px;
+	margin-right: 150px;
+}
+
+.login_frame {
+	margin-left: 100px;
+	margin-right: 100px;
+}
+
+.ib {
+	display: inline-block;
+}
+
+.fl {
+	float: left;
+}
+
+.fr {
+	float: right;
+}
+
+.phone_frame {
+	width: 300px;	
+}
+
+.email_frame {
+	width: 300px;
+}
+
+.input_frame {
+	width: 300px;
+}
+
+.textarea_frame {
+	width: 300px;
+	height: 100px;
+}
+
+#password {
+	width: 195px;
+}
+
+#password2 {
+	width: 164px;
+}
+
+#phoneNumber2 {
+	width: 120.8px;
+} 
+
+#phoneNumber3 {
+	width: 120.8px;
+} 
+
+#email1 {
+	width: 136px;
+}
+
+#email2 {
+	width: 137px;
+}
+
+.getYear, .certificateName, .company {
+	text-align: center;
+}
+
+.certificate_frame, .experience_frame,
+.certificate_box, .experience_box {
+	width: 520px;
+	margin-bottom: 5px;
+}
+
+
+
+.getYear {
+	width: 100px;
+	border-right: 1px solid black;
+}
+
+.certificateName { 
+	width: 390px;	
+}
+
+.DeleteListSpec {
+	width: 20px;
+	height: 20px;
+}
+
+.add_certificate, .add_experience {
+	margin-top: 20px;
+	width: 500px;
+	text-align: center; 
+}
+
+.workYear {
+	width: 135px;
+}
+
+.company {
+	width: 358px;
+}
+
+.workDetail {
+	width: 499px;
+	border-bottom: 1px solid black;
+}
+
+.info_submit {
+	margin-top: 100px;
+	width: 500px;
+	text-align: center;
+}
+
+.add_certificate_frame_copy, .add_experience_frame_copy {
+	display: none;
+}
+
+.none {
+	display: none;
+}
+
